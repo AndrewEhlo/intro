@@ -12,6 +12,7 @@ jobs:
       #  env:
       #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #    PR_URL: ${{ github.event.pull_request.html_url }}
-      - run: echo "$TEST_VAR"
-        env:
-          TEST_VAR: ${{ var.TEST_VAR }}
+      - uses: actions/upload-artifact@1
+        with:
+          name: harness-build-log
+          path: var/log/dmesg*
