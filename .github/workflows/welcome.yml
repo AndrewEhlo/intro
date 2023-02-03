@@ -1,5 +1,6 @@
 name: Post welcome comment
 on:
+  workflow_dispatch:
   pull_request:
     types: [opened]
 jobs:
@@ -12,3 +13,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
       - run: echo "$TEST_VAR"
+        env:
+          TEST_VAR: ${{ env.TEST_VAR }}
