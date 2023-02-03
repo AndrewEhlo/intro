@@ -12,7 +12,7 @@ jobs:
       #  env:
       #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #    PR_URL: ${{ github.event.pull_request.html_url }}
-      - uses: actions/upload-artifact@1
+      - uses: actions/upload-artifact
         with:
           name: harness-build-log
           path: var/log/dmesg*
