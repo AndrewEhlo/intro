@@ -42,7 +42,7 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/get-image-version@master
       id: image
       with:
-        path: './'
+        projectType: "storefront"
 
     #- name: Get changelog
     #  id: changelog
