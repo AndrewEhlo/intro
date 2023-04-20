@@ -86,17 +86,17 @@ jobs:
         docker tag ${{ steps.dockerBuild.outputs.imageName }}:${{ steps.image.outputs.taggedVersion }} virtopaasregistry.azurecr.io/vccom/storefront:${{ steps.image.outputs.taggedVersion }}
         docker push virtopaasregistrymain.azurecr.io/virtostart/storefront:${{ steps.image.outputs.taggedVersion }}
 
-  #deployDev:
-  #  if: ${{ github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
-  #  needs: ci
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #  - name: Install vc-build
-  #    run: dotnet tool install --global VirtoCommerce.GlobalTool
-  #  - name: Update DEV
-  #    run: vc-build SetHelmParameter -CloudUrl https://argo.virtocommerce.cloud  -EnvironmentName vccom-dev -CloudToken ${{ secrets.ARGO_TOKEN }} -HelmParameters storefront.image.tag=${{ steps.image.outputs.taggedVersion }}
-  #   - name: 'Check deployment status'
-  #     run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-dev -HealthStatus Healthy -SyncStatus Synced
+  deployDev:
+    if: ${{ github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install vc-build
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
+    - name: Update DEV
+      run: vc-build SetHelmParameter -CloudUrl https://argo.virtocommerce.cloud  -EnvironmentName vccom-dev -CloudToken ${{ secrets.ARGO_TOKEN }} -HelmParameters storefront.image.tag=${{ steps.image.outputs.taggedVersion }}
+    - name: 'Check deployment status'
+      run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-dev -HealthStatus Healthy -SyncStatus Synced
 
   deployQA:
     if: ${{ github.ref == 'refs/heads/release' }}
@@ -113,18 +113,18 @@ jobs:
     - name: 'Check deployment status'
       run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-qa2 -HealthStatus Healthy -SyncStatus Synced
 
-  #deployProd:
-  #  if: ${{ github.ref == 'refs/heads/release' }}
-  #  needs: deployQA
-  #  environment: PROD
-  #  runs-on: ubuntu-latest
-  #  steps:
+  deployProd:
+    if: ${{ github.ref == 'refs/heads/release' }}
+    needs: deployQA
+    environment: PROD
+    runs-on: ubuntu-latest
+    steps:
 
-  #  - name: Install vc-build
-  #    run: dotnet tool install --global VirtoCommerce.GlobalTool
+    - name: Install vc-build
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
 
-  #  - name: Update PROD
-  #    run: vc-build SetHelmParameter -CloudUrl https://argo.virtocommerce.cloud  -EnvironmentName vccom-main -CloudToken ${{ secrets.ARGO_TOKEN }} -HelmParameters storefront.image.tag=${{ steps.image.outputs.taggedVersion }}
+    - name: Update PROD
+      run: vc-build SetHelmParameter -CloudUrl https://argo.virtocommerce.cloud  -EnvironmentName vccom-main -CloudToken ${{ secrets.ARGO_TOKEN }} -HelmParameters storefront.image.tag=${{ steps.image.outputs.taggedVersion }}
 
-  #  - name: 'Check deployment status'
-  #    run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-main -HealthStatus Healthy -SyncStatus Synced
+    - name: 'Check deployment status'
+      run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-main -HealthStatus Healthy -SyncStatus Synced
