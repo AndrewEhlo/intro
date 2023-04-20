@@ -18,8 +18,8 @@ jobs:
     if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-latest
     env:
-      PUBLISH_TO_DOCKER: "true"
-      UPDATE_LATEST_TAG: "true"
+      #PUBLISH_TO_DOCKER: "true"
+      #UPDATE_LATEST_TAG: "true"
       VERSION_SUFFIX: ""
 
     steps:
@@ -31,11 +31,11 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set variables
-      if: ${{ github.event_name == 'workflow_dispatch' }}
-      run: |
-        echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
-        echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV
+    #- name: Set variables
+    #  if: ${{ github.event_name == 'workflow_dispatch' }}
+    #  run: |
+    #    echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
+    #    echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV
 
 
     - name: Get Image Version
