@@ -82,8 +82,8 @@ jobs:
 
     - name: Publish Github Release
       if: ${{ github.ref == 'refs/heads/release' }}
-      with:
-        changelog: ${{ steps.changelog.outputs.changelog }}
+      #with:
+        #changelog: ${{ steps.changelog.outputs.changelog }}
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Publish Docker Image
