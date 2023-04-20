@@ -16,7 +16,7 @@ on:
 jobs:
   ci:
     if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       #PUBLISH_TO_DOCKER: "true"
       #UPDATE_LATEST_TAG: "true"
