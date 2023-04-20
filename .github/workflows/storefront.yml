@@ -1,0 +1,129 @@
+# v1.1.4
+name: Storefront CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - test
+  pull_request:
+    branches:
+      - main
+      - test
+
+jobs:
+  ci:
+    if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
+    runs-on: ubuntu-latest
+    env:
+      PUBLISH_TO_DOCKER: "true"
+      UPDATE_LATEST_TAG: "true"
+      VERSION_SUFFIX: ""
+
+    steps:
+
+    - name: Install vc-build
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
+
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set variables
+      if: ${{ github.event_name == 'workflow_dispatch' }}
+      run: |
+        echo "PUBLISH_TO_DOCKER=false" >> $GITHUB_ENV
+        echo "UPDATE_LATEST_TAG=false" >> $GITHUB_ENV
+
+
+    - name: Get Image Version
+      uses: VirtoCommerce/vc-github-actions/get-image-version@master
+      id: image
+
+    - name: Get changelog
+      id: changelog
+      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+
+    - name: Set VERSION_SUFFIX variable
+      run: |
+        if [ '${{ github.event_name }}' = 'workflow_dispatch' ]; then
+          echo "VERSION_SUFFIX=${{ steps.image.outputs.fullSuffix }}" >> $GITHUB_ENV
+        else
+          echo "VERSION_SUFFIX=${{ steps.image.outputs.suffix }}" >> $GITHUB_ENV
+        fi;
+
+    - name: Add version suffix
+      if: ${{ github.ref != 'refs/heads/main' }}
+      uses: VirtoCommerce/vc-github-actions/add-version-suffix@master
+      with:
+        versionSuffix: ${{ env.VERSION_SUFFIX }}
+
+    - name: Build
+      run: vc-build Compress -TestsFilter "Category=Unit|Category=CI"
+
+    - name: Build Docker Image
+      if: ${{ github.ref == 'refs/heads/release' || github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      id: dockerBuild
+      uses: VirtoCommerce/vc-github-actions/build-docker-image@master
+      with:
+        tag: ${{ steps.image.outputs.taggedVersion }}
+        imageName: "storefront"
+        dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/storefront/Dockerfile"
+
+    - name: Publish Github Release
+      if: ${{ github.ref == 'refs/heads/main' }}
+      with:
+        changelog: ${{ steps.changelog.outputs.changelog }}
+      uses: VirtoCommerce/vc-github-actions/publish-github-release@master
+
+    - name: Publish Docker Image
+      if: ${{ github.ref == 'refs/heads/release' || github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+      run: |
+        docker login virtopaasregistrymain.azurecr.io -u vccom -p ${{ secrets.ACR_SECRET }}
+        docker pull ${{ steps.dockerBuild.outputs.imageName }}:${{ steps.image.outputs.taggedVersion }}
+        docker tag ${{ steps.dockerBuild.outputs.imageName }}:${{ steps.image.outputs.taggedVersion }} virtopaasregistry.azurecr.io/vccom/storefront:${{ steps.image.outputs.taggedVersion }}
+        docker push virtopaasregistrymain.azurecr.io/virtostart/storefront:${{ steps.image.outputs.taggedVersion }}
+
+  #deployDev:
+  #  if: ${{ github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
+  #  needs: ci
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #  - name: Install vc-build
+  #    run: dotnet tool install --global VirtoCommerce.GlobalTool
+  #  - name: Update DEV
+  #    run: vc-build SetHelmParameter -CloudUrl https://argo.virtocommerce.cloud  -EnvironmentName vccom-dev -CloudToken ${{ secrets.ARGO_TOKEN }} -HelmParameters storefront.image.tag=${{ steps.image.outputs.taggedVersion }}
+  #   - name: 'Check deployment status'
+  #     run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-dev -HealthStatus Healthy -SyncStatus Synced
+
+  deployQA:
+    if: ${{ github.ref == 'refs/heads/release' }}
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Install vc-build
+      run: dotnet tool install --global VirtoCommerce.GlobalTool
+
+    - name: Update QA  
+      run: vc-build SetHelmParameter -CloudUrl https://argo.virtocommerce.cloud  -EnvironmentName vccom-qa2 -CloudToken ${{ secrets.ARGO_TOKEN }} -HelmParameters storefront.image.tag=${{ steps.image.outputs.taggedVersion }}
+
+    - name: 'Check deployment status'
+      run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-qa2 -HealthStatus Healthy -SyncStatus Synced
+
+  #deployProd:
+  #  if: ${{ github.ref == 'refs/heads/release' }}
+  #  needs: deployQA
+  #  environment: PROD
+  #  runs-on: ubuntu-latest
+  #  steps:
+
+  #  - name: Install vc-build
+  #    run: dotnet tool install --global VirtoCommerce.GlobalTool
+
+  #  - name: Update PROD
+  #    run: vc-build SetHelmParameter -CloudUrl https://argo.virtocommerce.cloud  -EnvironmentName vccom-main -CloudToken ${{ secrets.ARGO_TOKEN }} -HelmParameters storefront.image.tag=${{ steps.image.outputs.taggedVersion }}
+
+  #  - name: 'Check deployment status'
+  #    run: vc-build WaitForStatus -CloudUrl https://argo.virtocommerce.cloud -CloudToken ${{ secrets.ARGO_TOKEN }} -EnvironmentName vccom-main -HealthStatus Healthy -SyncStatus Synced
