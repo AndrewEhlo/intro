@@ -71,11 +71,11 @@ jobs:
         imageName: "storefront"
         dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/storefront/Dockerfile"
 
-    - name: Publish Github Release
-      if: ${{ github.ref == 'refs/heads/main' }}
-      with:
-        changelog: ${{ steps.changelog.outputs.changelog }}
-      uses: VirtoCommerce/vc-github-actions/publish-github-release@master
+    #- name: Publish Github Release
+    #  if: ${{ github.ref == 'refs/heads/main' }}
+    #  with:
+    #    changelog: ${{ steps.changelog.outputs.changelog }}
+    #  uses: VirtoCommerce/vc-github-actions/publish-github-release@master
 
     - name: Publish Docker Image
       if: ${{ github.ref == 'refs/heads/release' || github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
