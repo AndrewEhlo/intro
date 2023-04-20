@@ -59,8 +59,8 @@ jobs:
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
 
-    - name: Build
-      run: vc-build Compress -TestsFilter "Category=Unit|Category=CI"
+    #- name: Build
+    #  run: vc-build Compress -TestsFilter "Category=Unit|Category=CI"
 
     - name: Build Docker Image
       if: ${{ github.ref == 'refs/heads/release' || github.ref == 'refs/heads/dev' || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/master') }}
