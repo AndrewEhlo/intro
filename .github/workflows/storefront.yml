@@ -41,9 +41,9 @@ jobs:
       uses: VirtoCommerce/vc-github-actions/get-image-version@master
       id: image
 
-    - name: Get changelog
-      id: changelog
-      uses: VirtoCommerce/vc-github-actions/changelog-generator@master
+    #- name: Get changelog
+    #  id: changelog
+    #  uses: VirtoCommerce/vc-github-actions/changelog-generator@master
 
     - name: Set VERSION_SUFFIX variable
       run: |
