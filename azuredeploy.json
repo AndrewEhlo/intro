@@ -1,0 +1,147 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appServicePlanName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of application service plan."
+      }
+    },
+    "siteName": {
+      "type": "string"
+    },
+    "appServicePlanSkuName": {
+      "type": "string",
+      "defaultValue": "S1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/pricing/details/app-service/"
+      }
+    },
+    "virtoCommercePlatformUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The endpoint url of Virto Commerce Platform."
+      }
+    },
+    "virtoCommercePlatformUserName": {
+      "type": "string",
+      "metadata": {
+        "description": "The administrator username of the Virto Commerce Platform."
+      }
+    },
+    "virtoCommercePlatformPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The administrator password of the Virto Commerce Platform."
+      }
+    },
+    "contentStorageConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "Connection string to content. Check details at https://virtocommerce.com/docs/latest/getting-started/deploy-from-precompiled-binaries-azure/"
+      }
+    },
+    "repoUrl": {
+      "type": "string",
+      "defaultValue": "https://github.com/VirtoCommerce/vc-storefront"
+    },
+    "branch": {
+      "type": "string",
+      "defaultValue": "master"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2018-02-01",
+      "type": "Microsoft.Web/serverfarms",
+      "name": "[parameters('appServicePlanName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "app",
+      "sku": {
+        "name": "[parameters('appServicePlanSkuName')]",
+        "capacity": 1
+      },
+      "properties": {
+        "name": "[parameters('appServicePlanName')]",
+        "numberOfWorkers": "1",
+        "reserved": false
+      }
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "type": "Microsoft.Web/sites",
+      "name": "[parameters('siteName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "app",
+      "dependsOn": [
+        "[concat('Microsoft.Web/serverFarms/', parameters('appServicePlanName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]": "empty"
+      },
+      "properties": {
+        "name": "[parameters('siteName')]",
+        "serverFarmId": "[concat( resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('appServicePlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "VirtoCommerce:Endpoint:Url",
+              "value": "[parameters('virtoCommercePlatformUrl')]"
+            },
+            {
+              "name": "VirtoCommerce:Endpoint:UserName",
+              "value": "[parameters('virtoCommercePlatformUserName')]"
+            },
+            {
+              "name": "VirtoCommerce:Endpoint:Password",
+              "value": "[parameters('virtoCommercePlatformPassword')]"
+            }
+          ],
+          "connectionStrings": [
+            {
+              "name": "ContentConnectionString",
+              "connectionString": "[parameters('contentStorageConnectionString')]",
+              "type": "Custom"
+            }
+          ],
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "dotnetcore"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2016-08-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites/', parameters('siteName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoUrl')]",
+            "branch": "[parameters('branch')]",
+            "IsManualIntegration": true
+          }
+        }
+      ]
+    }
+  ]
+}
