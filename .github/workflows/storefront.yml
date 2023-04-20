@@ -60,6 +60,11 @@ jobs:
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
 
+    - uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+        dotnet-quality: 'preview'
+        
     - name: Build
       run: vc-build Compress -TestsFilter "Category=Unit|Category=CI"
 
