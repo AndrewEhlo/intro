@@ -61,7 +61,7 @@ jobs:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
 
     - name: install dotnet
-      run: apt update && apt install -y dotnet6
+      run: sudo apt update && apt install -y dotnet6
 
     - name: Build
       run: vc-build Compress -TestsFilter "Category=Unit|Category=CI"
