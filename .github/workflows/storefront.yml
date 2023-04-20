@@ -16,7 +16,7 @@ on:
 jobs:
   ci:
     if: ${{ github.actor != 'dependabot[bot]' && (github.event.pull_request.head.repo.full_name == github.repository || github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       #PUBLISH_TO_DOCKER: "true"
       #UPDATE_LATEST_TAG: "true"
@@ -60,8 +60,8 @@ jobs:
       with:
         versionSuffix: ${{ env.VERSION_SUFFIX }}
 
-    - name: install dotnet
-      run: sudo apt update && sudo apt install -y dotnet31
+    #- name: install dotnet
+    #  run: sudo apt update && sudo apt install -y dotnet31
 
     - name: Build
       run: vc-build Compress -TestsFilter "Category=Unit|Category=CI"
