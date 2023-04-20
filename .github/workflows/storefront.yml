@@ -81,7 +81,7 @@ jobs:
         dockerFiles: "https://raw.githubusercontent.com/VirtoCommerce/vc-docker/master/linux/storefront/Dockerfile"
 
     - name: Publish Github Release
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ github.ref == 'refs/heads/release' }}
       with:
         changelog: ${{ steps.changelog.outputs.changelog }}
       uses: VirtoCommerce/vc-github-actions/publish-github-release@master
