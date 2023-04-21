@@ -1,11 +1,15 @@
 name: Storefront deployment
 on:
   workflow_dispatch:
-    inputs:
-      deployBranch: 
-        description: 'ArgoCd branch name'
-        required: true
-        default: 'dev'
+  push:
+    branches:
+      - main
+      - test
+      - release
+  pull_request:
+    branches:
+      - main
+      - test
 
 jobs:
   deploy-storefront:
