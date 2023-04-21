@@ -8,5 +8,5 @@ on:
         default: 'dev'
 
 jobs:
-  call-workflow-in-another-repo:
+  deploy-storefront:
       uses: AndrewEhlo/test-actions/.github/workflows/storefront.yml@main
