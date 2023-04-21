@@ -1,0 +1,19 @@
+name: Storefront deployment
+on:
+  workflow_dispatch:
+    inputs:
+      deployBranch: 
+        description: 'ArgoCd branch name'
+        required: true
+        default: 'dev'
+
+jobs:
+  cd:
+    runs-on: ubuntu-20.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+    steps: 
+
+    - name: Build and deploy storefront
+      uses: AndrewEhlo/test-actions/storefront@main
