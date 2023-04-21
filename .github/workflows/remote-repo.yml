@@ -8,12 +8,5 @@ on:
         default: 'dev'
 
 jobs:
-  cd:
-    runs-on: ubuntu-20.04
-    env:
-      GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-
-    steps: 
-
-    - name: Build and deploy storefront
-      uses: AndrewEhlo/test-actions/storefront@main
+  call-workflow-in-another-repo:
+      uses: AndrewEhlo/test-actions/.github/workflows/storefront.yml@main
