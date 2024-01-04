@@ -11,10 +11,8 @@ jobs:
          (github.event.pull_request.head.repo.full_name == github.repository ||
          github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
     runs-on: ubuntu-20.04
-
     outputs:
       run-e2e: ${{ steps.run-e2e.outputs.result }}
-
     steps:
     - name: Check commit message for version number
       id: run-e2e
