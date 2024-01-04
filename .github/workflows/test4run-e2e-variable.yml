@@ -1,4 +1,4 @@
-name: Platform CI
+name: test4run-e2e-variable
 
 on:
   workflow_dispatch:
@@ -33,5 +33,5 @@ jobs:
       - name: Check
         run: |
             then 
-              echo "Variable is ${{ (needs.ci.outputs.run-e2e }}"
+              echo "Variable is ${{ needs.ci.outputs.run-e2e }}"
             fi
