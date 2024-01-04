@@ -1,0 +1,37 @@
+name: Platform CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, dev ]
+
+jobs:
+  ci:
+    if: ${{ github.actor != 'dependabot[bot]' &&
+         (github.event.pull_request.head.repo.full_name == github.repository ||
+         github.event.pull_request.head.repo.full_name == '') }}  # Check that PR not from forked repo and not from Dependabot
+    runs-on: ubuntu-20.04
+
+    outputs:
+      run-e2e: ${{ steps.run-e2e.outputs.result }}
+
+    steps:
+    - name: Check commit message for version number
+      id: run-e2e
+      run: |
+        if [[ "${{ github.event.head_commit.message }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; 
+        then
+          echo "result=false" >> $GITHUB_OUTPUT
+        else
+          echo "result=true" >> $GITHUB_OUTPUT
+        fi
+  platform-katalon-tests:
+    needs: 'ci'
+    #if: ${{ (needs.ci.outputs.run-e2e == 'true') }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check
+        run: |
+            then 
+              echo "Variable is ${{ (needs.ci.outputs.run-e2e }}"
+            fi
