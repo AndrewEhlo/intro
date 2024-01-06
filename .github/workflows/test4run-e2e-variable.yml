@@ -25,7 +25,7 @@ jobs:
         fi
   platform-katalon-tests:
     needs: 'ci'
-    if: ${{ (needs.ci.outputs.run-e2e == 'true') }}
+    if: ${{ github.ref == 'refs/heads/master' && always() }}
     runs-on: ubuntu-20.04
     steps:
       - name: Check
