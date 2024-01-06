@@ -25,7 +25,7 @@ jobs:
         fi
   platform-katalon-tests:
     needs: 'ci'
-    if: ${{ github.ref == 'refs/heads/master' && always() }}
+    if: ${{ github.ref == 'refs/heads/main' && always() }}
     runs-on: ubuntu-20.04
     steps:
       - name: Check
