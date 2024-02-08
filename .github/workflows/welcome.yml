@@ -8,11 +8,7 @@ jobs:
     name: Post welcome comment
     runs-on: ubuntu-latest
     steps:
-      #- run: gh pr comment $PR_URL --body "Welcome to the repository!"
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #    PR_URL: ${{ github.event.pull_request.html_url }}
-      - uses: actions/upload-artifact@v3
-        with:
-          name: harness-build-log
-          path: var/log
+      - name: Test script
+        if: ${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master') && github.event_name = 'workflow_dispatch' }}
+        run: |
+          echo "Test message"
