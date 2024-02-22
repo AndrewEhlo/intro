@@ -1,8 +1,12 @@
 name: Post welcome comment
 on:
   workflow_dispatch:
+  push:
+    branches:
+      [master, dev]
   pull_request:
-    types: [opened]
+    branches:
+      [master, dev]
 jobs:
   build:
     name: Post welcome comment
