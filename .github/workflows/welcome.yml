@@ -10,9 +10,10 @@ on:
 jobs:
   build:
     name: Post welcome comment
+    env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
     steps:
-      - name: Test script
-        if: ${{ (github.ref == 'refs/heads/dev' && github.event_name != 'workflow_dispatch') || github.ref == 'refs/heads/master' }}
+      - name: Create GH Release
         run: |
-          echo "Test message"
+          gh release create v1.0.0 --title "My Release" --notes "This is my release notes"
