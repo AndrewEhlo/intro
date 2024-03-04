@@ -34,6 +34,9 @@ Another option is to create different sites for different regions so that a spec
 
 It is also possible to connect Virto Commerce to multiple touchpoints so that customers will get a real omnichannel experience.
 
+
+
+
 ## Key features
 * Multi-Store support
 * Multi-Language support
