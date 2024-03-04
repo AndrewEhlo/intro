@@ -12,6 +12,10 @@
 
 > Precaution! Storefront version 5 and above is backward NON-compatible with VirtoCommerce platform v2! Use only with platform v3.
 
+
+
+
+
 [![Build status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-storefront/master)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-storefront/job/master/) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&branch=dev&metric=alert_status)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-storefront) 
 
 [![CI status](https://github.com/VirtoCommerce/vc-storefront/workflows/Storefront%20CI/badge.svg?branch=dev)](https://github.com/VirtoCommerce/vc-storefront/actions?query=workflow%3A"Storefront+CI")  [![Quality gate](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&metric=alert_status&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-storefront) [![Reliability rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&metric=reliability_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-storefront) [![Security rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&metric=security_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-storefront) [![Sqale rating](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&metric=sqale_rating&branch=dev)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-storefront) [![Lines of code](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&branch=dev&metric=ncloc)](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&branch=dev&metric=ncloc)&emsp;
