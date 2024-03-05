@@ -26,6 +26,6 @@ jobs:
         #if: ${{ github.event_name == 'pull_request' }}
         uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
         with:
-          artifactUrl: https://${{ github.event_name }}.com
+          artifactUrl: https://example.com #https://${{ github.event_name }}.com
           repoOrg: ${{ github.repository_owner }}
           downloadComment: 'Artifact URL:'
