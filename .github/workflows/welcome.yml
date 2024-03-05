@@ -19,10 +19,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - run: |
+          cd ${{ github.workspace }}
+          ls
       - name: Add link to PR
         #if: ${{ github.event_name == 'pull_request' }}
         uses: VirtoCommerce/vc-github-actions/publish-artifact-link@master
         with:
-          artifactUrl: ${{ github.event_name }}
+          artifactUrl: https://example.com #https://${{ github.event_name }}.com
           repoOrg: ${{ github.repository_owner }}
           downloadComment: 'Artifact URL:'

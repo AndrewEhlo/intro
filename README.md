@@ -1,4 +1,6 @@
 
+
+
 # [Virto Commerce Storefront Kit](https://virtocommerce.com) 
 
 
@@ -9,6 +11,10 @@
 
 
 > Precaution! Storefront version 5 and above is backward NON-compatible with VirtoCommerce platform v2! Use only with platform v3.
+
+
+
+
 
 [![Build status](http://ci.virtocommerce.com/buildStatus/icon?job=vc-2-org/vc-storefront/master)](http://ci.virtocommerce.com/job/vc-2-org/job/vc-storefront/job/master/) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=VirtoCommerce_vc-storefront&branch=dev&metric=alert_status)](https://sonarcloud.io/dashboard?id=VirtoCommerce_vc-storefront) 
 
@@ -27,6 +33,9 @@ It is possible, for example, to create sites with a different design for differe
 Another option is to create different sites for different regions so that a specific product set will be available to a specific region, is still based on one product data.
 
 It is also possible to connect Virto Commerce to multiple touchpoints so that customers will get a real omnichannel experience.
+
+
+
 
 ## Key features
 * Multi-Store support
